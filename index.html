@@ -846,19 +846,6 @@
         document.body.appendChild(cartContainer);
     }
 
-    // Search Product Functionality
-    const searchInput = document.querySelector('input[placeholder="Cari Produk"]');
-    const productCards = document.querySelectorAll('.product-card');
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            productCards.forEach(card => {
-                const productName = card.querySelector('h3')?.textContent.toLowerCase() || '';
-                card.style.display = productName.includes(searchTerm) ? 'block' : 'none';
-            });
-        });
-    }
-
     // Image Hover Effect
     const productImages = document.querySelectorAll('.product-card img');
     productImages.forEach(img => {
@@ -887,4 +874,141 @@
         }
     });
 });
+
+// === HAMBURGER MENU FUNCTIONALITY ===
+// Mobile Menu Toggle
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+const menuIcon = document.getElementById('menuIcon');
+const closeIcon = document.getElementById('closeIcon');
+
+if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', function() {
+        // Toggle menu visibility
+        mobileMenu.classList.toggle('hidden');
+        
+        // Toggle icons
+        menuIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
+        
+        // Add animation classes
+        if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('animate-fade-in');
+        }
+    });
+
+    // Close mobile menu when clicking on links
+    const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+            menuIcon.classList.remove('hidden');
+            closeIcon.classList.add('hidden');
+        });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!mobileMenuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
+            mobileMenu.classList.add('hidden');
+            menuIcon.classList.remove('hidden');
+            closeIcon.classList.add('hidden');
+        }
+    });
+}
+
+// === SEARCH MODAL FUNCTIONALITY ===
+const searchBtn = document.getElementById('searchBtn');
+const searchModal = document.getElementById('searchModal');
+const searchOverlay = document.getElementById('searchOverlay');
+const closeSearch = document.getElementById('closeSearch');
+const searchContent = document.getElementById('searchContent');
+
+// Open search modal
+if (searchBtn && searchModal) {
+    searchBtn.addEventListener('click', function() {
+        searchModal.classList.remove('hidden');
+        searchContent.classList.remove('scale-95');
+        searchContent.classList.add('scale-100');
+        
+        // Focus on search input
+        const searchInput = searchModal.querySelector('input[type="text"]');
+        if (searchInput) {
+            setTimeout(() => searchInput.focus(), 100);
+        }
+        
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+    });
+}
+
+// Close search modal
+function closeSearchModal() {
+    if (searchModal && searchContent) {
+        searchContent.classList.remove('scale-100');
+        searchContent.classList.add('scale-95');
+        
+        setTimeout(() => {
+            searchModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }, 200);
+    }
+}
+
+// Close search when clicking close button
+if (closeSearch) {
+    closeSearch.addEventListener('click', closeSearchModal);
+}
+
+// Close search when clicking overlay
+if (searchOverlay) {
+    searchOverlay.addEventListener('click', closeSearchModal);
+}
+
+// Close search with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && !searchModal.classList.contains('hidden')) {
+        closeSearchModal();
+    }
+});
+
+// === SEARCH FUNCTIONALITY ===
+const searchInput = searchModal?.querySelector('input[type="text"]');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        // Simple search simulation - you can expand this
+        if (searchTerm.length > 0) {
+            console.log('Searching for:', searchTerm);
+            // Add your search logic here
+            // Example: filter products, show suggestions, etc.
+        }
+    });
+
+    // Handle Enter key for search
+    searchInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const searchTerm = this.value.toLowerCase().trim();
+            if (searchTerm.length > 0) {
+                // Perform search action
+                console.log('Performing search for:', searchTerm);
+                alert(`Mencari: ${searchTerm}`);
+                closeSearchModal();
+            }
+        }
+    });
+}
+
+// Click on popular products in search modal
+const popularProducts = searchModal?.querySelectorAll('.cursor-pointer');
+if (popularProducts) {
+    popularProducts.forEach(product => {
+        product.addEventListener('click', function() {
+            const productName = this.querySelector('p').textContent;
+            alert(`Membuka produk: ${productName}`);
+            closeSearchModal();
+        });
+    });
+}
 </script>
